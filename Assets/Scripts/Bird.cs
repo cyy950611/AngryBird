@@ -5,12 +5,17 @@ using UnityEngine;
 public class Bird : MonoBehaviour {
 
 	private bool isClick = false;
-	public Transform rightPos;
+	
 	public float maxDis = 1.2f;
 
 	private SpringJoint2D sp; 
 
 	private Rigidbody2D rg;
+
+	public LineRenderer rightLine;
+	public Transform rightPos;
+	public LineRenderer leftLine;
+	public Transform leftPos;
 	// Use this for initialization
 	private void Awake() {
 		sp = GetComponent<SpringJoint2D>();
@@ -32,6 +37,7 @@ public class Bird : MonoBehaviour {
 				pos *= maxDis;
 				transform.position = pos + rightPos.position;
 			}
+			Line();
 		}
 	}
 
@@ -50,5 +56,13 @@ public class Bird : MonoBehaviour {
 
 	void Fly(){
 		sp.enabled = false;
+	}
+
+	void Line(){
+		rightLine.SetPosition(0, rightPos.position);
+		rightLine.SetPosition(1, transform.position);
+
+		leftLine.SetPosition(0, leftPos.position);
+		leftLine.SetPosition(1, transform.position);
 	}
 }
