@@ -61,7 +61,6 @@ public class BirdTrail : MonoBehaviour {
     /// </summary>
     public void ClearTrails()
     {
-
         myTrail.ClearTrail();
     }
 }

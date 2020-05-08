@@ -19,10 +19,13 @@ public class Bird : MonoBehaviour {
 	public Transform leftPos;
 
     public GameObject boom;
-	// Use this for initialization
+    // Use this for initialization
+
+    private BirdTrail myTrail;
 	private void Awake() {
 		sp = GetComponent<SpringJoint2D>();
 		rg = GetComponent<Rigidbody2D>();
+        myTrail = GetComponent<BirdTrail>();
 	}
 
 	void Start () {
@@ -62,6 +65,7 @@ public class Bird : MonoBehaviour {
 	}
 
 	void Fly(){
+        myTrail.StartTrails();
 		sp.enabled = false;
         Invoke("Next", 3);
 	}
@@ -85,5 +89,9 @@ public class Bird : MonoBehaviour {
         Destroy(gameObject);
         Instantiate(boom, transform.position, Quaternion.identity);
         GameManager._instance.NextBird();
+    }
+
+    void OnCollisionEnter2D(Collision2D collision) {
+        myTrail.ClearTrails();
     }
 }
