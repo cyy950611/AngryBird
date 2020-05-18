@@ -8,7 +8,8 @@ public class Bird : MonoBehaviour {
 	
 	public float maxDis = 1.2f;
 
-	private SpringJoint2D sp; 
+    [HideInInspector]
+	public SpringJoint2D sp; 
 
 	private Rigidbody2D rg;
 
@@ -16,10 +17,15 @@ public class Bird : MonoBehaviour {
 	public Transform rightPos;
 	public LineRenderer leftLine;
 	public Transform leftPos;
-	// Use this for initialization
+
+    public GameObject boom;
+    // Use this for initialization
+
+    private BirdTrail myTrail;
 	private void Awake() {
 		sp = GetComponent<SpringJoint2D>();
 		rg = GetComponent<Rigidbody2D>();
+        myTrail = GetComponent<BirdTrail>();
 	}
 
 	void Start () {
@@ -52,17 +58,40 @@ public class Bird : MonoBehaviour {
 		isClick = false;
 		rg.isKinematic = false;
 		Invoke("Fly",0.1f);
+        //禁用划线组件
+        rightLine.enabled = false;
+        leftLine.enabled = false;
+        
 	}
 
 	void Fly(){
+        myTrail.StartTrails();
 		sp.enabled = false;
+        Invoke("Next", 3);
 	}
 
 	void Line(){
+        rightLine.enabled = true;
+        leftLine.enabled = true;
+
 		rightLine.SetPosition(0, rightPos.position);
 		rightLine.SetPosition(1, transform.position);
 
 		leftLine.SetPosition(0, leftPos.position);
 		leftLine.SetPosition(1, transform.position);
 	}
+
+    /// <summary>
+    /// 下一只小鸟飞出
+    /// </summary>
+    void Next() {
+        GameManager._instance.birds.Remove(this);
+        Destroy(gameObject);
+        Instantiate(boom, transform.position, Quaternion.identity);
+        GameManager._instance.NextBird();
+    }
+
+    void OnCollisionEnter2D(Collision2D collision) {
+        myTrail.ClearTrails();
+    }
 }
